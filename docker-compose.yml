@@ -1,0 +1,30 @@
+volumes:
+  post_data:
+
+services:
+  python_part:
+    build:
+      dockerfile: ./server/Dockerfile
+    container_name: bewise_serv
+    restart: always
+    networks:
+      - flask_dev
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    container_name: vistor_db
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: bewise
+    networks:
+      - flask_dev
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+      - post_data:/var/lib/postgresql/data/
+
+networks:
+  flask_dev:
